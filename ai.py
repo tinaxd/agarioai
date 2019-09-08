@@ -71,7 +71,7 @@ class AgarioAI:
             need, vec = self.force_avoid_object(avoid_obj)
             if need:
                 self.previous_target = vec
-                print('<AVOIDING OBJ> ' + str(len(self.foods)) + ' foods around. ' + str(target), end='\r')
+                print('<AVOIDING OBJ> ' + str(len(self.foods)) + ' foods around. ' + str(vec), end='\r')
                 return vec
         if self.foods:
             target_food = self.find_food_natural()
