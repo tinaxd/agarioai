@@ -54,7 +54,7 @@ class AgarioAI:
         return should_avoid
 
     def force_avoid_object(self, obj):
-        avoid_vec = np.array([0,0])
+        avoid_vec = np.array([0.0,0.0])
         need_avoid = False
         for cell in self.local_player['cells']:
             safe_dist = (obj['radius'] + cell['radius']) * 2 # TODO
