@@ -57,7 +57,7 @@ class AgarioAI:
         avoid_vec = np.array([0.0,0.0])
         need_avoid = False
         for cell in self.local_player['cells']:
-            safe_dist = (obj['radius'] + cell['radius']) * 2 # TODO
+            safe_dist = (obj['radius'] + cell['radius'])# TODO
             actual_dist = math.sqrt(math.pow(obj['x']-cell['x'], 2) + math.pow(obj['y']-cell['y'], 2))
             print('SafeDist: ' + str(safe_dist) + ' ActualDist: ' + str(actual_dist))
             if actual_dist < safe_dist:
