@@ -3,17 +3,18 @@ import threading
 import time
 import sys
 
-import ai
+import ai_load as ai
 
-if len(sys.argv) != 3:
-    print('Usage: python client.py <username> <ainame>')
+if len(sys.argv) < 3:
+    print('Usage: python client.py <username> <ainame> <optional args>')
     sys.exit(0)
 
 sio = socketio.Client()
 
 try:
-    agarioAI = ai.get_ai(sys.argv[2])()
-except:
+    agarioAI = ai.get_ai(sys.argv[2])(*sys.argv[3:])
+except Exception as e:
+    print(e)
     print('No such AI. Exiting')
     sys.exit(1)
 
@@ -34,12 +35,12 @@ def on_welcome(playerSettings):
 
 @sio.on('serverTellPlayerMove')
 def on_serverTellPlayerMove(userData, foodsList, massList, virusList):
+    agarioAI.other_players = []
     for user in userData:
         if 'id' not in user:
             agarioAI.local_player = user
         else:
-            agarioAI.other_players.clear()
-            agarioAI.other_players[user['id']] = user
+            agarioAI.other_players.append(user)
     
     agarioAI.foods = foodsList
     

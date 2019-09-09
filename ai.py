@@ -15,6 +15,14 @@ class AgarioAI:
     def velocity(self):
         return (self.previous_target['x']-self.local_player['x'], self.previous_target['y']-self.local_player['y'])
 
+    @property
+    def myX(self):
+        return self.local_player['x']
+    
+    @property
+    def myY(self):
+        return self.local_player['y']
+
     def find_nearest_food(self):
         pX = self.local_player['x']
         pY = self.local_player['y']
@@ -94,8 +102,3 @@ class AgarioAI:
 
 class StandardAI(AgarioAI):
     pass
-
-def get_ai(ai_name):
-    return {
-        'StandardAI': StandardAI
-    }[ai_name]
