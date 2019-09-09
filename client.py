@@ -2,6 +2,7 @@ import socketio
 import threading
 import time
 import sys
+import os
 
 import ai_load as ai
 
@@ -51,7 +52,13 @@ def on_serverTellPlayerMove(userData, foodsList, massList, virusList):
     if target:
         sio.emit('0', target)
 
-@sio.on('serverUpdateAllPlayers')
+@sio.on('RIP')
+def on_rip():
+    print('RIP...')
+    sio.close()
+    sys.exit(0)
+
+#@sio.on('serverUpdateAllPlayers')
 
 
 @sio.on('playerJoin')
@@ -63,6 +70,7 @@ def on_playerJoin(data):
 def disconnect():
     print('Disconnected')
 
-sio.connect('http://192.168.11.40:3000?type=player')
+addr = os.getenv('ADDR', '192.168.11.40:3000')
+sio.connect('http://' + addr + '?type=player')
 sio.emit('respawn')
 sio.wait()
