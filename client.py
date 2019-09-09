@@ -51,7 +51,13 @@ def on_serverTellPlayerMove(userData, foodsList, massList, virusList):
     if target:
         sio.emit('0', target)
 
-@sio.on('serverUpdateAllPlayers')
+@sio.on('RIP')
+def on_rip():
+    print('RIP...')
+    sio.close()
+    sys.exit(0)
+
+#@sio.on('serverUpdateAllPlayers')
 
 
 @sio.on('playerJoin')
