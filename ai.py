@@ -74,7 +74,7 @@ class AgarioAI:
                 print('<AVOIDING OBJ> ' + str(len(self.foods)) + ' foods around. ' + str(vec), end='\r')
                 return vec
         if self.foods:
-            target_food = self.find_food_natural()
+            target_food = self.find_nearest_food()
             target = {'x': target_food['x'], 'y': target_food['y']}
         else:
             target = {'x': 0, 'y': 0}
@@ -90,3 +90,12 @@ class AgarioAI:
         self.previous_target = target
         print(str(len(self.foods)) + ' foods around. ' + str(target), end='\r')
         return target
+
+
+class StandardAI(AgarioAI):
+    pass
+
+def get_ai(ai_name):
+    return {
+        'StandardAI': StandardAI
+    }[ai_name]

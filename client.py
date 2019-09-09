@@ -3,15 +3,19 @@ import threading
 import time
 import sys
 
-from ai import AgarioAI
+import ai
 
-if len(sys.argv) != 2:
-    print('Usage: python client.py <username>')
+if len(sys.argv) != 3:
+    print('Usage: python client.py <username> <ainame>')
     sys.exit(0)
 
 sio = socketio.Client()
 
-agarioAI = AgarioAI()
+try:
+    agarioAI = ai.get_ai(sys.argv[2])()
+except:
+    print('No such AI. Exiting')
+    sys.exit(1)
 
 @sio.event
 def connect():
@@ -23,8 +27,8 @@ def on_welcome(playerSettings):
     playerInfo = playerSettings
     playerInfo.update({
         'name': sys.argv[1],
-        'screenWidth': 1920,
-        'screenHeight': 1024
+        'screenWidth': 1000,
+        'screenHeight': 550
     })
     sio.emit('gotit', playerInfo)
 
