@@ -10,6 +10,10 @@ class AgarioAI:
         self.foods = []
         self.virus = {}
         self.previous_target = {'x': 0, 'y': 0}
+    
+    @staticmethod
+    def distance(p1, p2):
+        return math.sqrt(math.pow(p1[0]-p2[0], 2) + math.pow(p1[1]-p2[1], 2))
    
     @property
     def velocity(self):
@@ -85,10 +89,10 @@ class AgarioAI:
             target_food = self.find_nearest_food()
             target = {'x': target_food['x'], 'y': target_food['y']}
         else:
-            target = {'x': 0, 'y': 0}
+            target = {'x': 500, 'y': 500}
         
-        pX = self.local_player['x']
-        pY = self.local_player['y']
+        pX = self.myX
+        pY = self.myY
         dist = math.sqrt(math.pow(target['x']-pX, 2) + math.pow(target['y']-pY, 2))
         target.update({
             'x': (target['x'] - pX) ,
@@ -102,3 +106,45 @@ class AgarioAI:
 
 class StandardAI(AgarioAI):
     pass
+
+
+class NaturalAI(AgarioAI):
+    def __init__(self):
+        self.last_food_target = None
+    
+    def find_food_with_lock(self):
+        if self.last_food_target:
+            for cell in self.local_player['cells']:
+                if self.distance((cell['x'], cell['y']), self.last_food_target) < cell['radius']:
+                    self.last_food_target = None
+                    break
+        if self.last_food_target:
+            return self.last_food_target
+        food = self.find_nearest_food()
+        self.food_target_lock = True
+        self.last_food_target = (food['x'], food['y'])
+        return self.last_food_target
+
+    def next_target(self):
+        virus_check = self.check_virus()
+        for avoid_obj in virus_check:
+            need, vec = self.force_avoid_object(avoid_obj)
+            if need:
+                self.previous_target = vec
+                print('<AVOIDING OBJ> ' + str(len(self.foods)) + ' foods around. ' + str(vec), end='\r')
+                return vec
+        if self.foods:
+            target = self.find_food_with_lock()
+        else:
+            target = {'x': 500, 'y': 500}
+        
+        pX = self.myX
+        pY = self.myY
+        target = {
+            'x': (target[0] - pX) ,
+            'y': (target[1] - pY) 
+        }
+
+        self.previous_target = target
+        print(str(len(self.foods)) + ' foods around. ' + str(target), end='\r')
+        return target
